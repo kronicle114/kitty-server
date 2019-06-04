@@ -1,14 +1,19 @@
 from .middlewares import login_required
-from flask import Flask, json, g, request
+from flask import Flask, json, g, request, render_template
 # from app.kudo.service import Service as Kudo
 # from app.kudo.schema import GithubRepoSchema
+from app.kudo.schema import KittySchema
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/", methods=["GET"]) # """get all kitty"""
-def sup():
+@app.route("/")
+def home():
+  return 'kitty is home'
+
+@app.route("/kitty", methods=["GET"]) # """get all kitty"""
+def index():
   kitty = [
     {
     "name": "broman",
@@ -23,22 +28,10 @@ def sup():
   ]
   return json_response(kitty)
 
-# @app.route("/kudos", methods=["GET"])
-# @login_required
-# def index():
-#  return json_response(Kudo(g.user).find_all_kudos())
-
-
-# @app.route("/kudos", methods=["POST"])
-# @login_required
-# def create():
-#    github_repo = GithubRepoSchema().load(json.loads(request.data))
-  
-#    if github_repo.errors:
-#      return json_response({'error': github_repo.errors}, 422)
-
-#    kudo = Kudo(g.user).create_kudo_for(github_repo)
-#    return json_response(kudo)
+@app.route("/create-kitty", methods=["POST"])
+def create_cat():
+  cat = KittySchema().load(json.loads(request.data))
+  return json_response(cat)
 
 
 # @app.route("/kudo/<int:repo_id>", methods=["GET"])
